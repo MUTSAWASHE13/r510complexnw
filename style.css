@@ -1,0 +1,565 @@
+/* General Styling */
+:root {
+    --color-black: #1a1a1a; /* Darker black for depth */
+    --color-gold: #D4AF37; /* Standard gold color */
+    --color-light-gold: #FFD700; /* Lighter gold for highlights */
+    --color-dark-gold: #B8860B; /* Darker gold for shadows */
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Montserrat', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ================================================= */
+/* GLOBAL STYLING */
+/* ================================================= */
+body {
+    font-family: var(--font-body);
+    line-height: 1.6;
+    color: #f0f0f0; 
+    background-color: var(--color-black); 
+    position: relative; 
+    z-index: 1; 
+}
+
+/* Ensure all main content sections stack correctly */
+.main-header, main, .main-footer, section {
+    position: relative; 
+    z-index: 2; 
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1, h2, h3 {
+    font-family: var(--font-heading);
+    color: var(--color-gold);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+h1 { font-size: 3.5em; }
+h2 { font-size: 2.5em; }
+h3 { font-size: 1.8em; }
+
+a {
+    color: var(--color-gold);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--color-light-gold);
+}
+
+ul {
+    list-style: none;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    background-color: var(--color-gold);
+    color: var(--color-black);
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border: 2px solid var(--color-gold);
+}
+
+.btn:hover {
+    background-color: var(--color-light-gold);
+    color: var(--color-black);
+    border-color: var(--color-light-gold);
+}
+
+.btn-dark {
+    background-color: var(--color-black);
+    color: var(--color-gold);
+    border: 2px solid var(--color-gold);
+}
+
+.btn-dark:hover {
+    background-color: var(--color-gold);
+    color: var(--color-black);
+}
+
+.btn-link {
+    color: var(--color-gold);
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 0.9em;
+    padding: 5px 0;
+    display: inline-block;
+}
+
+/* Header & Navigation */
+.main-header {
+    background: transparent; 
+    /* Set header height to full viewport height to contain the full-screen image */
+    min-height: 100vh; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    /* Explicit height for calculation */
+    height: 90px; 
+    background-color: rgba(0, 0, 0, 0.7); 
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar .logo img {
+    height: 60px; 
+    filter: drop-shadow(0 0 5px var(--color-dark-gold)); 
+}
+
+.nav-links {
+    display: flex;
+}
+
+.nav-links li {
+    margin-left: 30px;
+}
+
+.nav-links a {
+    color: var(--color-gold);
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 5px 0;
+    position: relative;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--color-gold);
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+/* ================================================= */
+/* HERO SECTION - FULL IMAGE BACKGROUND */
+/* ================================================= */
+.hero-section {
+    text-align: center;
+    padding: 100px 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    /* Calculate remaining height (100vh minus the navbar height) */
+    height: calc(100vh - 90px); 
+
+    /* Apply the Background Image for full coverage */
+    background: url('logo.jpeg') no-repeat center center; 
+    background-size: cover; 
+    background-attachment: fixed; /* Parallax effect */
+    position: relative;
+    z-index: 10; 
+}
+
+/* Apply the Dark Overlay to the Hero Section */
+.hero-section::before {
+    content: '';
+    position: absolute; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 1; 
+}
+
+.hero-content-wrapper { 
+    position: relative;
+    z-index: 2; /* Content sits above the overlay */
+}
+
+.hero-section h1 {
+    font-size: 4em;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.9);
+}
+
+.hero-section p {
+    font-size: 1.5em;
+    margin-bottom: 40px;
+    color: #f0f0f0;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+}
+
+/* Sections */
+section {
+    padding: 80px 0;
+    text-align: center;
+}
+
+/* Use solid background colors for readability */
+.section-dark-bg {
+    background-color: var(--color-black); 
+    color: #f0f0f0;
+}
+
+.section-gold-bg {
+    background-color: var(--color-dark-gold); 
+    color: var(--color-black); 
+}
+
+.section-gold-bg h2, .section-gold-bg h3 {
+    color: var(--color-black);
+}
+.section-gold-bg p {
+    color: var(--color-black);
+}
+.section-gold-bg a.btn {
+    background-color: var(--color-black);
+    color: var(--color-gold);
+    border-color: var(--color-black);
+}
+.section-gold-bg a.btn:hover {
+    background-color: #333; 
+    color: var(--color-light-gold);
+}
+.section-gold-bg a.btn-link {
+    color: var(--color-black);
+}
+.section-gold-bg a.btn-link:hover {
+    color: #333;
+}
+
+
+/* Store Grid */
+.store-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+    margin-bottom: 40px;
+}
+
+.store-card {
+    background-color: #2a2a2a; 
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border: 1px solid var(--color-gold);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.store-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 15px var(--color-light-gold);
+}
+
+.store-card h3 {
+    color: var(--color-gold);
+    margin-bottom: 10px;
+}
+
+.store-card p {
+    color: #ccc;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+/* Event List */
+.event-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+    margin-bottom: 40px;
+}
+
+.event-item {
+    background-color: var(--color-black); 
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border: 1px solid var(--color-black); 
+    text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.event-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 15px var(--color-light-gold);
+}
+
+.event-item h3 {
+    color: var(--color-gold);
+    text-align: left;
+    margin-bottom: 10px;
+}
+.event-item p {
+    color: #f0f0f0;
+    margin-bottom: 10px;
+}
+
+/* Services */
+.service-list ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.service-list li {
+    background-color: #2a2a2a;
+    color: var(--color-gold);
+    padding: 15px 25px;
+    border-radius: 5px;
+    border: 1px solid var(--color-gold);
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.gold-icon {
+    margin-right: 10px;
+    color: var(--color-gold);
+    font-size: 1.2em; 
+}
+
+/* Footer */
+.main-footer {
+    background-color: var(--color-black); 
+    color: #aaa;
+    padding: 50px 0 20px;
+    font-size: 0.9em;
+    text-align: center;
+    border-top: 1px solid var(--color-dark-gold);
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 30px;
+    margin-bottom: 40px;
+    text-align: left;
+}
+
+.footer-col {
+    flex: 1;
+    min-width: 250px;
+    padding: 0 20px;
+}
+
+/* FIX: Align the Follow Us text with the centered icons */
+.footer-col h3 {
+    color: var(--color-gold);
+    margin-bottom: 15px;
+    text-align: center; /* ALIGNMENT FIX */
+}
+
+.footer-col ul li {
+    margin-bottom: 8px;
+}
+
+.footer-col ul li a {
+    color: #aaa;
+}
+
+.footer-col ul li a:hover {
+    color: var(--color-light-gold);
+}
+
+/* Social Icons Container (Parent) */
+.social-icons {
+    display: flex; /* Makes icons side-by-side */
+    justify-content: center; /* Centers the group of icons */
+    gap: 15px; /* Space between the icons */
+    text-align: center;
+}
+
+/* Social Icon Link (The Circle) */
+.social-icons a {
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    margin-right: 0; /* Removed old margin */
+    border: 1px solid var(--color-gold);
+    border-radius: 50%; /* Makes the container circular */
+    width: 40px; 
+    height: 40px; 
+    overflow: hidden; /* Clips the image to the circular border */
+    transition: background-color 0.3s ease, border-color 0.3s ease; 
+    background-color: #333; 
+}
+
+.social-icons a:hover {
+    background-color: var(--color-gold);
+    border-color: var(--color-light-gold); 
+}
+
+/* Style for the actual image inside the social icon circle */
+.social-icon-img {
+    width: 28px; 
+    height: 28px; 
+    object-fit: contain; 
+    border-radius: 50%; 
+    background-color: transparent; 
+    padding: 0; 
+    margin: 0; 
+
+    /* Filter to turn black/transparent icons to a gold color */
+    filter: invert(79%) sepia(35%) saturate(541%) hue-rotate(3deg) brightness(101%) contrast(89%);
+}
+
+/* Adjust image color on hover */
+.social-icons a:hover .social-icon-img {
+    /* Filter to turn gold icons into black/dark color when the circle background becomes gold */
+    filter: brightness(0) invert(1); 
+}
+
+.copyright {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(var(--color-gold), 0.2);
+}
+
+/* Mobile Menu Toggle */
+.menu-toggle {
+    display: none; 
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.menu-toggle span {
+    background-color: var(--color-gold);
+    height: 3px;
+    width: 25px;
+    margin: 4px 0;
+    transition: all 0.3s ease;
+}
+
+/* Animation for the hamburger to 'X' transformation */
+.menu-toggle.open span:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.menu-toggle.open span:nth-child(2) {
+    opacity: 0; /* Hide the middle line */
+}
+
+.menu-toggle.open span:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* ================================================= */
+/* RESPONSIVE DESIGN FOR MOBILE PHONES */
+/* ================================================= */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px; /* Tighter padding for mobile screens */
+    }
+
+    /* Navigation */
+    .navbar {
+        padding: 15px 20px;
+        height: 80px; /* Adjusted height for mobile */
+    }
+
+    .nav-links {
+        display: none; 
+        flex-direction: column;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.95);
+        position: absolute;
+        top: 80px; /* Matches new navbar height */
+        left: 0;
+        padding: 20px 0;
+        text-align: center;
+        border-top: 1px solid var(--color-gold);
+        z-index: 999;
+    }
+
+    .nav-links.active {
+        display: flex; 
+    }
+
+    .nav-links li {
+        margin: 10px 0;
+    }
+
+    .menu-toggle {
+        display: flex; 
+    }
+
+    /* Hero Section */
+    .hero-section {
+        /* Maintain the full image height on mobile */
+        height: calc(100vh - 80px); /* Adjusting navbar height for mobile view (e.g., 80px) */
+        min-height: 50vh; 
+        padding: 50px 10px;
+    }
+
+    .hero-section h1 {
+        font-size: 2.5em; 
+    }
+    .hero-section p {
+        font-size: 1.1em; 
+    }
+
+    /* Grid Sections */
+    .store-grid, 
+    .event-list {
+        grid-template-columns: 1fr; 
+    }
+    
+    /* Footer */
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .footer-col {
+        text-align: center;
+        margin-bottom: 20px;
+        padding: 0 10px;
+    }
+    .footer-col h3 {
+        text-align: center;
+    }
+    .footer-col ul {
+        text-align: center;
+    }
+    .social-icons {
+        justify-content: center;
+        display: flex;
+    }
+}

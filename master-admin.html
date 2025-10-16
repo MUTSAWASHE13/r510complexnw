@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R510 Master Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Reusing global CSS variables from style.css (assumed) */
+        :root {
+            --color-dark: #333333;
+            --color-gold: #FFD700; 
+            --color-light-gray: #f4f4f4;
+            /* Admin Specific Palette */
+            --color-black: #1a1a1a;
+            --color-admin-gold: #D4AF37; /* Slightly darker gold for background contrast */
+            --color-light-gold: #FFD700;
+            --color-dark-gold: #B8860B;
+            --color-white: #ffffff;
+        }
+
+        body.section-dark-bg {
+            background-color: var(--color-dark);
+            color: var(--color-light-gray);
+        }
+
+        .admin-container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #222;
+            border: 1px solid var(--color-admin-gold);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+            min-height: 80vh;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .admin-header a.btn {
+            padding: 8px 15px;
+            font-size: 0.9em;
+        }
+
+        .btn {
+            background-color: var(--color-gold);
+            color: var(--color-dark);
+            padding: 10px 25px;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #e6c200;
+        }
+        .btn-dark {
+            background-color: var(--color-dark);
+            color: var(--color-white);
+        }
+        .btn-dark:hover {
+            background-color: black;
+        }
+
+
+        /* Tabs Styling */
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 2px solid var(--color-dark-gold);
+            margin-bottom: 20px;
+        }
+        .tab-button {
+            background: transparent;
+            border: none;
+            padding: 15px 20px;
+            color: #aaa;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: color 0.3s, background-color 0.3s;
+            text-transform: uppercase;
+        }
+        .tab-button:hover {
+            color: var(--color-light-gold);
+        }
+        .tab-button.active {
+            color: var(--color-admin-gold);
+            border-bottom: 3px solid var(--color-admin-gold);
+            font-weight: 700;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px 0;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            color: var(--color-admin-gold);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .form-group input[type="text"],
+        .form-group textarea,
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #333;
+            border: 1px solid #555;
+            color: #f0f0f0;
+            border-radius: 4px;
+        }
+
+        /* List Styling */
+        .management-list {
+            margin-top: 20px;
+        }
+        .item-row {
+            background-color: #1a1a1a;
+            border-left: 5px solid var(--color-dark-gold);
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 4px;
+        }
+        
+        /* New styling for content alignment */
+        .item-row-content {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            padding-right: 15px;
+        }
+
+        /* New styling for the image thumbnail */
+        .item-image-thumb {
+            width: 50px; /* Reasonable size */
+            height: 50px;
+            margin-right: 15px;
+            background-color: #333;
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .item-image-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Ensures the image fits without cropping */
+        }
+        
+        .item-text-details {
+            color: #f0f0f0;
+            font-size: 0.9em;
+            margin-left: 5px; /* Spacing between title and details */
+        }
+
+        .item-row button {
+            margin-left: 10px;
+        }
+        
+    </style>
+</head>
+<body class="section-dark-bg">
+
+    <main>
+        <div class="admin-container">
+            <div class="admin-header">
+                <h2>R510 Master Content Dashboard</h2>
+                <a href="index.html" class="btn">View Live Site</a>
+            </div>
+            <p style="color: #ccc; text-align: center; margin-bottom: 30px;">
+                Manage all dynamic sections. Data is saved in your browser's local storage.
+            </p>
+
+            <div class="tabs">
+                <button class="tab-button active" data-tab="stores">Stores</button>
+                <button class="tab-button" data-tab="events">Events</button>
+                <button class="tab-button" data-tab="services">Services</button>
+            </div>
+
+            <div id="stores" class="tab-content active">
+                <h3>Store Management</h3>
+                <form id="add-store-form">
+                    <div class="form-group">
+                        <label for="store-title">Store Name:</label>
+                        <input type="text" id="store-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="store-description">Description (Shop number, contact, hours):</label>
+                        <textarea id="store-description" rows="2" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="store-image">Image (Optional):</label>
+                        <input type="file" id="store-image" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn">Add Store</button>
+                </form>
+                <hr style="border-top: 1px solid #444; margin: 30px 0;">
+                <h4>Current Stores</h4>
+                <div id="stores-list" class="management-list"></div>
+            </div>
+
+            <div id="events" class="tab-content">
+                <h3>Event Management</h3>
+                <form id="add-event-form">
+                    <div class="form-group">
+                        <label for="event-title">Event Title:</label>
+                        <input type="text" id="event-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="event-date">Date/Time (Short):</label>
+                        <input type="text" id="event-date" placeholder="e.g., Sept 5-7, 2024" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="event-description">Description:</label>
+                        <textarea id="event-description" rows="2" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="event-image">Image (Optional):</label>
+                        <input type="file" id="event-image" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn">Add Event</button>
+                </form>
+                <hr style="border-top: 1px solid #444; margin: 30px 0;">
+                <h4>Current Events</h4>
+                <div id="events-list" class="management-list"></div>
+            </div>
+
+            <div id="services" class="tab-content">
+                <h3>Service Management</h3>
+                <form id="add-service-form">
+                    <div class="form-group">
+                        <label for="service-name">Service Name:</label>
+                        <input type="text" id="service-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="service-description">Description/Location:</label>
+                        <textarea id="service-description" rows="2" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="service-icon-path">Service Icon/Image (Optional):</label>
+                        <input type="file" id="service-icon-path" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn">Add Service</button>
+                </form>
+                <hr style="border-top: 1px solid #444; margin: 30px 0;">
+                <h4>Current Services</h4>
+                <div id="services-list" class="management-list"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Use a single key to manage all data structure
+        const MASTER_STORAGE_KEY = 'r510_master_data';
+
+        // --- Default Data Structure (MATCHES frontend script.js) ---
+        const defaultMasterData = {
+            stores: [
+                { id: 4, title: "R2 Shandis", description: "Shop R2. Contact: 076 310 6472", image: '' },
+                { id: 5, title: "Eyespot Optometrist", description: "Shop R3. Specialist eye care and vision solutions. Contact: 064 538 5715", image: '' },
+                { id: 6, title: "PATITSO FOOD PARLOR", description: "Shop R8. Delicious meals and takeaways. Contact: 074 968 9747", image: '' },
+                { id: 7, title: "Khumalo All In One Shop", description: "General retail and essentials. Contact: +27 82 577 6407", image: '' },
+                { id: 1, title: "Glamorous Glow Fashion", description: "Shop L1. Style and trends for every occasion. Open 09:00 - 17:00. Contact: 078 348 1878", image: '' },
+                { id: 2, title: "NDA & DAUGHTER BEAUTY SALON", description: "Shop R7. Full range of beauty and hair services. Contact: 063 679 5462", image: '' },
+                { id: 3, title: "Marabasta Cellular", description: "Mobile phones, accessories, and repairs. Contact: 061 309 6882", image: '' },
+            ],
+            events: [
+                { id: 101, title: "Grand Opening", date: "October 25, 2025", description: "We're thrilled to invite you to the Grand Opening of the R510 Shopping Complex!", image: 'logo.jpeg' }
+            ],
+            services: [
+                { id: 205, title: "Hawker/Vending Space", description: "Space available for hawkers. R500 per store.", image: '★' },
+                { id: 201, title: "Free Wi-Fi", description: "Available throughout the complex.", image: '★' },
+                { id: 202, title: "Customer Service Office", description: "Located on room 7.", image: '★' },
+                { id: 203, title: "Ample Parking", description: "Parking available.", image: '★' },
+                { id: 204, title: "Restrooms & Baby Changing Facilities", description: "Easily accessible.", image: '★' }
+            ]
+        };
+
+        let masterData = defaultMasterData; 
+
+        // --- Core Functions ---
+
+        const loadData = () => {
+            const storedData = localStorage.getItem(MASTER_STORAGE_KEY);
+            if (storedData) {
+                masterData = JSON.parse(storedData);
+            } else {
+                // If no data exists, initialize localStorage with the default data
+                localStorage.setItem(MASTER_STORAGE_KEY, JSON.stringify(defaultMasterData));
+                masterData = defaultMasterData; 
+            }
+        };
+
+        const saveData = () => {
+            localStorage.setItem(MASTER_STORAGE_KEY, JSON.stringify(masterData));
+            renderAllLists();
+        };
+
+        const renderList = (type) => {
+            const container = document.getElementById(type + '-list');
+            if (!container) return;
+
+            container.innerHTML = '';
+            const data = masterData[type];
+
+            if (data.length === 0) {
+                container.innerHTML = `<p style="color:#aaa; padding:10px 0;">No ${type} currently listed.</p>`;
+                return;
+            }
+            
+            // Sort stores alphabetically for easier management
+            if (type === 'stores') {
+                data.sort((a, b) => a.title.localeCompare(b.title));
+            }
+
+            data.forEach(item => {
+                const itemRow = document.createElement('div');
+                itemRow.className = 'item-row';
+                let contentHTML = '';
+                let imageHTML = '';
+
+                // 1. Determine Image/Icon HTML
+                if (item.image) {
+                    // Check if it's a Base64 image data URL or a simple path/keyword
+                    if (item.image.startsWith('data:') || item.image.includes('.')) {
+                        // For stores and events, show the image thumbnail
+                        imageHTML = `
+                            <div class="item-image-thumb">
+                                <img src="${item.image}" alt="${item.title} image thumbnail">
+                            </div>`;
+                    } else if (type === 'services') {
+                        // For services, display the icon placeholder (like '★')
+                         imageHTML = `<div class="item-image-thumb" style="font-size: 24px; color: var(--color-admin-gold);">${item.image}</div>`;
+                    }
+                }
+                
+                // 2. Determine Text Content HTML
+                if (type === 'stores') {
+                    contentHTML = `
+                        <div style="display:flex; flex-direction:column;">
+                            <strong>${item.title}</strong>
+                            <span class="item-text-details">${item.description}</span>
+                        </div>
+                    `;
+                } else if (type === 'events') {
+                    contentHTML = `
+                         <div style="display:flex; flex-direction:column;">
+                            <strong>${item.title}</strong>
+                            <span class="item-text-details">Date: ${item.date}</span>
+                            <span class="item-text-details">${item.description}</span>
+                         </div>
+                    `;
+                } else if (type === 'services') {
+                    contentHTML = `
+                         <div style="display:flex; flex-direction:column;">
+                            <strong>${item.title}</strong>
+                            <span class="item-text-details">${item.description}</span>
+                         </div>
+                    `;
+                }
+
+                itemRow.innerHTML = `
+                    <div class="item-row-content">
+                        ${imageHTML}
+                        ${contentHTML}
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-dark" onclick="deleteItem('${type}', ${item.id})">Delete</button>
+                    </div>
+                `;
+                container.appendChild(itemRow);
+            });
+        };
+
+        const renderAllLists = () => {
+            renderList('stores');
+            renderList('events');
+            renderList('services');
+        };
+
+        // Function to handle image upload (reads file and converts to Base64 string)
+        const getBase64Image = (file) => {
+            return new Promise((resolve, reject) => {
+                if (!file) {
+                    resolve(''); // No file provided
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
+        };
+
+        // --- CRUD Operations ---
+
+        // Deletion
+        window.deleteItem = (type, id) => {
+            if (confirm(`Are you sure you want to delete this ${type.slice(0, -1)}?`)) {
+                masterData[type] = masterData[type].filter(item => item.id !== id);
+                saveData();
+            }
+        };
+
+        // Addition (Stores)
+        document.getElementById('add-store-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const title = document.getElementById('store-title').value.trim();
+            const description = document.getElementById('store-description').value.trim();
+            const imageFile = document.getElementById('store-image').files[0];
+            const imageBase64 = await getBase64Image(imageFile);
+
+            if (!title || !description) return;
+
+            masterData.stores.push({
+                id: Date.now(),
+                title: title,
+                description: description,
+                image: imageBase64
+            });
+
+            saveData();
+            this.reset();
+        });
+
+        // Addition (Events)
+        document.getElementById('add-event-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const title = document.getElementById('event-title').value.trim();
+            const date = document.getElementById('event-date').value.trim();
+            const description = document.getElementById('event-description').value.trim();
+            const imageFile = document.getElementById('event-image').files[0];
+            const imageBase64 = await getBase64Image(imageFile);
+
+            if (!title || !date || !description) return;
+
+            masterData.events.push({
+                id: Date.now(),
+                title: title,
+                date: date,
+                description: description,
+                image: imageBase64
+            });
+
+            saveData();
+            this.reset();
+        });
+
+        // Addition (Services)
+        document.getElementById('add-service-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const title = document.getElementById('service-name').value.trim();
+            const description = document.getElementById('service-description').value.trim();
+            const imageFile = document.getElementById('service-icon-path').files[0];
+            const imageBase64 = await getBase64Image(imageFile);
+            
+            // For services, we check for a custom image or use a default '★' icon placeholder
+            const iconPath = imageBase64 || '★';
+
+            if (!title || !description) return;
+
+            masterData.services.push({
+                id: Date.now(),
+                title: title,
+                description: description,
+                image: iconPath
+            });
+
+            saveData();
+            this.reset();
+        });
+        
+        // --- Tab Logic ---
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                // Deactivate all buttons and content
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+                // Activate clicked button and corresponding content
+                e.target.classList.add('active');
+                const tabId = e.target.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            renderAllLists();
+        });
+    </script>
+</body>
+</html>
