@@ -114,9 +114,11 @@
             margin-bottom: 5px;
             font-weight: 600;
         }
+        /* ADDED input[type="date"] to match other input styles */
         .form-group input[type="text"],
         .form-group textarea,
-        .form-group input[type="file"] {
+        .form-group input[type="file"],
+        .form-group input[type="date"] {
             width: 100%;
             padding: 10px;
             background-color: #333;
@@ -227,8 +229,8 @@
                         <input type="text" id="event-title" required>
                     </div>
                     <div class="form-group">
-                        <label for="event-date">Date/Time (Short):</label>
-                        <input type="text" id="event-date" placeholder="e.g., Sept 5-7, 2024" required>
+                        <label for="event-date">Expiration Date (YYYY-MM-DD):</label>
+                        <input type="date" id="event-date" required>
                     </div>
                     <div class="form-group">
                         <label for="event-description">Description:</label>
@@ -273,7 +275,7 @@
         // Use a single key to manage all data structure
         const MASTER_STORAGE_KEY = 'r510_master_data';
 
-        // --- Default Data Structure (MATCHES frontend script.js) ---
+        // --- Default Data Structure (UPDATED date format for expiration) ---
         const defaultMasterData = {
             stores: [
                 { id: 4, title: "R2 Shandis", description: "Shop R2. Contact: 076 310 6472", image: '' },
@@ -285,7 +287,8 @@
                 { id: 3, title: "Marabasta Cellular", description: "Mobile phones, accessories, and repairs. Contact: 061 309 6882", image: '' },
             ],
             events: [
-                { id: 101, title: "Grand Opening", date: "October 25, 2025", description: "We're thrilled to invite you to the Grand Opening of the R510 Shopping Complex!", image: 'logo.jpeg' }
+                // CRITICAL CHANGE: Changed date format to YYYY-MM-DD for consistency with expiration logic
+                { id: 101, title: "Grand Opening", date: "2025-10-25", description: "We're thrilled to invite you to the Grand Opening of the R510 Shopping Complex!", image: 'logo.jpeg' }
             ],
             services: [
                 { id: 205, title: "Hawker/Vending Space", description: "Space available for hawkers. R500 per store.", image: '★' },
@@ -321,11 +324,16 @@
             if (!container) return;
 
             container.innerHTML = '';
-            const data = masterData[type];
-
-            if (data.length === 0) {
-                container.innerHTML = `<p style="color:#aaa; padding:10px 0;">No ${type} currently listed.</p>`;
-                return;
+            let data = masterData[type];
+            
+            // --- NEW: Implement Expiration Check for Admin View ---
+            // While the frontend handles expiration automatically, showing the expiration status
+            // in the admin dashboard is good practice.
+            if (type === 'events') {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0); 
+                
+                data.sort((a, b) => new Date(a.date) - new Date(b.date)); // Sort events by date
             }
             
             // Sort stores alphabetically for easier management
@@ -333,11 +341,18 @@
                 data.sort((a, b) => a.title.localeCompare(b.title));
             }
 
+
+            if (data.length === 0) {
+                container.innerHTML = `<p style="color:#aaa; padding:10px 0;">No ${type} currently listed.</p>`;
+                return;
+            }
+            
             data.forEach(item => {
                 const itemRow = document.createElement('div');
                 itemRow.className = 'item-row';
                 let contentHTML = '';
                 let imageHTML = '';
+                let statusBadge = ''; // New for event expiration status
 
                 // 1. Determine Image/Icon HTML
                 if (item.image) {
@@ -354,7 +369,7 @@
                     }
                 }
                 
-                // 2. Determine Text Content HTML
+                // 2. Determine Text Content HTML and Status
                 if (type === 'stores') {
                     contentHTML = `
                         <div style="display:flex; flex-direction:column;">
@@ -363,19 +378,36 @@
                         </div>
                     `;
                 } else if (type === 'events') {
+                    const eventDate = new Date(item.date);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    const isExpired = eventDate < today;
+
+                    const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+                    const displayDate = new Date(item.date).toLocaleDateString('en-US', dateOptions);
+
+                    if (isExpired) {
+                        statusBadge = `<span style="background-color: #8B0000; color: white; padding: 2px 6px; border-radius: 3px; font-size: 0.75em; margin-left: 10px;">EXPIRED</span>`;
+                    } else {
+                        statusBadge = `<span style="background-color: #006400; color: white; padding: 2px 6px; border-radius: 3px; font-size: 0.75em; margin-left: 10px;">UPCOMING</span>`;
+                    }
+
                     contentHTML = `
                          <div style="display:flex; flex-direction:column;">
-                            <strong>${item.title}</strong>
-                            <span class="item-text-details">Date: ${item.date}</span>
+                            <div style="display:flex; align-items:center;">
+                                <strong>${item.title}</strong>
+                                ${statusBadge}
+                            </div>
+                            <span class="item-text-details">Date: ${displayDate}</span>
                             <span class="item-text-details">${item.description}</span>
                          </div>
                     `;
                 } else if (type === 'services') {
                     contentHTML = `
-                         <div style="display:flex; flex-direction:column;">
+                          <div style="display:flex; flex-direction:column;">
                             <strong>${item.title}</strong>
                             <span class="item-text-details">${item.description}</span>
-                         </div>
+                          </div>
                     `;
                 }
 
@@ -447,7 +479,8 @@
         document.getElementById('add-event-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const title = document.getElementById('event-title').value.trim();
-            const date = document.getElementById('event-date').value.trim();
+            // IMPORTANT: This retrieves the YYYY-MM-DD format from the date input
+            const date = document.getElementById('event-date').value.trim(); 
             const description = document.getElementById('event-description').value.trim();
             const imageFile = document.getElementById('event-image').files[0];
             const imageBase64 = await getBase64Image(imageFile);
@@ -457,7 +490,7 @@
             masterData.events.push({
                 id: Date.now(),
                 title: title,
-                date: date,
+                date: date, // Stored in YYYY-MM-DD for expiration logic
                 description: description,
                 image: imageBase64
             });
