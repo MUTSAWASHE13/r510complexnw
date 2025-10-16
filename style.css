@@ -49,6 +49,17 @@ h1 { font-size: 3.5em; }
 h2 { font-size: 2.5em; }
 h3 { font-size: 1.8em; }
 
+/* Clock Styling - NEW */
+.mall-clock {
+    color: var(--color-light-gold);
+    font-size: 1.5em;
+    font-weight: 600;
+    margin-bottom: 30px;
+    text-align: center;
+    font-family: var(--font-heading);
+    letter-spacing: 2px;
+}
+
 a {
     color: var(--color-gold);
     text-decoration: none;
@@ -411,7 +422,7 @@ section {
     display: flex; 
     justify-content: center;
     align-items: center;
-    margin-right: 0; /* Removed old margin */
+    margin-right: 0; 
     border: 1px solid var(--color-gold);
     border-radius: 50%; /* Makes the container circular */
     width: 40px; 
@@ -436,14 +447,14 @@ section {
     padding: 0; 
     margin: 0; 
 
-    /* Filter to turn black/transparent icons to a gold color */
-    filter: invert(79%) sepia(35%) saturate(541%) hue-rotate(3deg) brightness(101%) contrast(89%);
+    /* IMPORTANT: Filter removed/set to none to keep original image colors */
+    filter: none; 
 }
 
 /* Adjust image color on hover */
 .social-icons a:hover .social-icon-img {
-    /* Filter to turn gold icons into black/dark color when the circle background becomes gold */
-    filter: brightness(0) invert(1); 
+    /* IMPORTANT: Filter removed/set to none to keep original image colors on hover */
+    filter: none; 
 }
 
 .copyright {
